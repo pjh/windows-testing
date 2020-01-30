@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prepull
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: prepull-limit-range
+  namespace: prepull
+spec:
+  limits:
+  - type: Container
+    defaultRequest:
+      cpu: 1m
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: prepull-test-containers
+  namespace: prepull
+spec:
+  selector:
+    matchLabels:
+      prepull-test-images: e2e
+  template:
+    metadata:
+      labels:
+        prepull-test-images: e2e
+    spec:
+      nodeSelector:
+        kubernetes.io/os: windows
+      restartPolicy: Never
+      # To generate this list from the build-log.txt output of an e2e test
+      # result:
+      #   grep -o -E 'e2eteam/([[:alnum:]_-]+):([[:alnum:]./_-]+)' \
+      #   build-log.txt | sort | uniq
+      containers:
+      - image: e2eteam/agnhost:2.8
+        name: agnhost-2.8
+        command: ["cmd", "exit"]
+      - image: e2eteam/busybox:1.29
+        name: busybox1
+        command: ["cmd", "exit"]
+      - image: e2eteam/cassandra:v13
+        name: cassandra5
+        command: ["cmd", "exit"]
+      - image: e2eteam/curl:1803
+        name: curl2
+        command: ["cmd", "exit"]
+      - image: e2eteam/dnsutils:1.1
+        name: dnsutils6
+        command: ["cmd", "exit"]
+      - image: e2eteam/echoserver:2.2
+        name: echoserver7
+        command: ["cmd", "exit"]
+      - image: e2eteam/entrypoint-tester:1.0
+        name: entrypoint-tester8
+        command: ["cmd", "exit"]
+      - image: e2eteam/etcd:3.3.10
+        name: etcd9
+        command: ["cmd", "exit"]
+      - image: e2eteam/etcd:3.4.3
+        name: etcd-3.4.3
+        command: ["cmd", "exit"]
+      - image: e2eteam/etcd:v3.3.10
+        name: etcd10
+        command: ["cmd", "exit"]
+      - image: e2eteam/fakegitserver:1.0
+        name: fakegitserver11
+        command: ["cmd", "exit"]
+      - image: e2eteam/gb-frontend:v6
+        name: gb-frontend12
+        command: ["cmd", "exit"]
+      - image: e2eteam/httpd:2.4.38-alpine
+        name: httpd-2.4.38
+        command: ["cmd", "exit"]
+      - image: e2eteam/httpd:2.4.39-alpine
+        name: httpd-2.4.39
+        command: ["cmd", "exit"]
+      - image: e2eteam/java:openjdk-8-jre
+        name: java-openjdk-8
+        command: ["cmd", "exit"]
+      - image: e2eteam/jessie-dnsutils:1.0
+        name: jessie-dnsutils17
+        command: ["cmd", "exit"]
+      - image: e2eteam/kitten:1.0
+        name: kitten18
+        command: ["cmd", "exit"]
+      - image: e2eteam/mounttest:1.0
+        name: mounttest21
+        command: ["cmd", "exit"]
+      - image: e2eteam/nautilus:1.0
+        name: nautilus22
+        command: ["cmd", "exit"]
+      - image: e2eteam/nginx:1.14-alpine
+        name: nginx26
+        command: ["cmd", "exit"]
+      - image: e2eteam/pause:3.1
+        name: pause-3.1
+        command: ["cmd", "exit"]
+      - image: e2eteam/sample-apiserver:1.17
+        name: sample-apiserver-1.17
+        command: ["cmd", "exit"]
+      - image: e2eteam/test-webserver:1.0
+        name: test-webserver4
+        command: ["cmd", "exit"]
+      - image: mcr.microsoft.com/k8s/core/pause:1.0.0
+        name: pause
