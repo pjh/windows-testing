@@ -1,7 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prepull
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: prepull-limit-range
+  namespace: prepull
+spec:
+  limits:
+  - type: Container
+    defaultRequest:
+      cpu: 1m
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: prepull
+  name: prepull-test-containers
+  namespace: prepull
 spec:
   selector:
     matchLabels:
@@ -13,27 +30,77 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/os: windows
-      initContainers:
+      restartPolicy: Never
+      containers:
+      - image: e2eteam/agnhost:2.8
+        name: agnhost
+        command: ["cmd", "exit"]
+      - image: e2eteam/agnhost:2.6
+        name: agnhostprivate
+        command: ["cmd", "exit"]
       - image: e2eteam/busybox:1.29
         name: busybox1
-        command: ["cmd", "exit"]
-      - image: e2eteam/curl:1803
-        name: curl2
-        command: ["cmd", "exit"]
-      - image: e2eteam/java:openjdk-8-jre
-        name: java3
-        command: ["cmd", "exit"]
-      - image: e2eteam/test-webserver:1.0
-        name: test-webserver4
-        command: ["cmd", "exit"]
-      - image: e2eteam/cassandra:v13
-        name: cassandra5
         command: ["cmd", "exit"]
       - image: e2eteam/dnsutils:1.1
         name: dnsutils6
         command: ["cmd", "exit"]
       - image: e2eteam/echoserver:2.2
         name: echoserver7
+        command: ["cmd", "exit"]
+      - image: e2eteam/etcd:v3.4.3
+        name: etcd-v3-4-3
+        command: ["cmd", "exit"]
+      - image: e2eteam/gb-frontend:v6
+        name: gb-frontend12
+        command: ["cmd", "exit"]
+      - image: e2eteam/gb-redisslave:v3
+        name: gb-redisslave13
+        command: ["cmd", "exit"]
+      - image: e2eteam/httpd:2.4.38-alpine
+        name: httpd2-4-38
+        command: ["cmd", "exit"]
+      - image: e2eteam/httpd:2.4.39-alpine
+        name: httpd2-4-39
+        command: ["cmd", "exit"]
+      - image: e2eteam/jessie-dnsutils:1.0
+        name: jessie-dnsutils17
+        command: ["cmd", "exit"]
+      - image: e2eteam/kitten:1.0
+        name: kitten18
+        command: ["cmd", "exit"]
+      - image: e2eteam/nautilus:1.0
+        name: nautilus22
+        command: ["cmd", "exit"]
+      - image: e2eteam/nginx:1.14-alpine
+        name: nginx26
+        command: ["cmd", "exit"]
+      - image: e2eteam/nginx:1.15-alpine
+        name: nginx27
+        command: ["cmd", "exit"]
+      - image: e2eteam/nonroot:1.0
+        name: nonroot
+        command: ["cmd", "exit"]
+      - image: e2eteam/pause:3.1
+        name: pause-3-1
+        command: ["cmd", "exit"]
+      - image: e2eteam/redis:5.0.5-alpine
+        name: redis-v5-0-5
+        command: ["cmd", "exit"]
+      - image: e2eteam/resource-consumer:1.5
+        name: resource-consumer33-2
+        command: ["cmd", "exit"]
+      - image: e2eteam/resource-consumer-controller:1.0
+        name: resource-consumer-controller34
+        command: ["cmd", "exit"]
+      - image: e2eteam/sample-apiserver:1.17
+        name: sample-apiserver-v1-17
+        command: ["cmd", "exit"]
+      - image: e2eteam/test-webserver:1.0
+        name: test-webserver4
+        command: ["cmd", "exit"]
+      # images below are used for testing 1.14 and 1.15:
+      - image: e2eteam/curl:1803
+        name: curl2
         command: ["cmd", "exit"]
       - image: e2eteam/entrypoint-tester:1.0
         name: entrypoint-tester8
@@ -47,12 +114,6 @@ spec:
       - image: e2eteam/fakegitserver:1.0
         name: fakegitserver11
         command: ["cmd", "exit"]
-      - image: e2eteam/gb-frontend:v6
-        name: gb-frontend12
-        command: ["cmd", "exit"]
-      - image: e2eteam/gb-redisslave:v3
-        name: gb-redisslave13
-        command: ["cmd", "exit"]
       - image: e2eteam/hazelcast-kubernetes:3.8_1
         name: hazelcast-kubernetes14
         command: ["cmd", "exit"]
@@ -61,12 +122,6 @@ spec:
         command: ["cmd", "exit"]
       - image: e2eteam/iperf:1.0
         name: iperf16
-        command: ["cmd", "exit"]
-      - image: e2eteam/jessie-dnsutils:1.0
-        name: jessie-dnsutils17
-        command: ["cmd", "exit"]
-      - image: e2eteam/kitten:1.0
-        name: kitten18
         command: ["cmd", "exit"]
       - image: e2eteam/liveness:1.1
         name: liveness19
@@ -77,9 +132,6 @@ spec:
       - image: e2eteam/mounttest:1.0
         name: mounttest21
         command: ["cmd", "exit"]
-      - image: e2eteam/nautilus:1.0
-        name: nautilus22
-        command: ["cmd", "exit"]
       - image: e2eteam/net:1.0
         name: net23
         command: ["cmd", "exit"]
@@ -89,17 +141,8 @@ spec:
       - image: e2eteam/nettest:1.0
         name: nettest25
         command: ["cmd", "exit"]
-      - image: e2eteam/nginx:1.14-alpine
-        name: nginx26
-        command: ["cmd", "exit"]
-      - image: e2eteam/nginx:1.15-alpine
-        name: nginx27
-        command: ["cmd", "exit"]
       - image: e2eteam/no-snat-test:1.0
         name: no-snat-test28
-        command: ["cmd", "exit"]
-      - image: e2eteam/pause:3.1
-        name: pause29
         command: ["cmd", "exit"]
       - image: e2eteam/port-forward-tester:1.0
         name: port-forward-tester30
@@ -113,12 +156,6 @@ spec:
       - image: e2eteam/resource-consumer:1.4
         name: resource-consumer33-1
         command: ["cmd", "exit"]
-      - image: e2eteam/resource-consumer:1.5
-        name: resource-consumer33-2
-        command: ["cmd", "exit"]
-      - image: e2eteam/resource-consumer-controller:1.0
-        name: resource-consumer-controller34
-        command: ["cmd", "exit"]
       - image: e2eteam/rethinkdb:1.16.0_1
         name: rethinkdb35
         command: ["cmd", "exit"]
@@ -131,6 +168,5 @@ spec:
       - image: e2eteam/webhook:1.13v1
         name: webhook38
         command: ["cmd", "exit"]
-      containers:
       - image: mcr.microsoft.com/k8s/core/pause:1.0.0
         name: pause

@@ -28,8 +28,8 @@ done
 # https://github.com/kubernetes-sigs/windows-testing/blob/master/images/PullImages.ps1
 SCRIPT_ROOT=$(cd `dirname $0` && pwd)
 kubectl create -f ${SCRIPT_ROOT}/prepull.yaml
-# Wait 10 minutes for the test images to be pulled onto the nodes.
-sleep ${PREPULL_TIMEOUT:-15m}
+# Wait several minutes for the test images to be pulled onto the nodes.
+sleep ${PREPULL_TIMEOUT:-30m}
 # Check the status of the pods.
 kubectl get pods -o wide
 # Delete the pods anyway since pre-pulling is best-effort
